@@ -28,6 +28,6 @@ Once the image is generated, it will be used as the base image for other *poks*
 * Password: **pokify**
 
 #### URLs:
-https://<IP>:9443/ProcessAdmin
-https://<IP>:9443/ProcessCenter
-https://<IP>:9043/ibm/console
+* https://<IP>:9443/ProcessAdmin
+* https://<IP>:9443/ProcessCenter
+* https://<IP>:9043/ibm/console
