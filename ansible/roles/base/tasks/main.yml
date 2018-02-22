@@ -1,0 +1,74 @@
+- name: Stop logging services
+  service:
+    name: "{{item}}"
+    state: stopped
+  with_items:
+    - rsyslog
+
+- name: Set logs to rotate
+  shell: /sbin/logrotate -f /etc/logrotate.conf
+
+- name: Clean YUM cache
+  shell: /usr/bin/yum clean all
+
+- name: Remove old logs
+  file:
+    state: absent
+    path: "{{item}}"
+  with_items:
+    - /var/log/*.gz
+    - /var/log/dmesg.old
+    - /var/log/anaconda
+
+- name: Truncate logs
+  shell: /bin/cat /dev/null > "{{item}}"
+  with_items:
+    - /var/log/audit/audit.log
+    - /var/log/wtmp
+    - /var/log/lastlog
+    - /var/log/grubby
+
+- name: Remove network interface persistence
+  file:
+    state: absent
+    path: "{{item}}"
+  with_items:
+    - /etc/udev/rules.d/70-persistent-net.rules
+    - /lib/udev/rules.d/75-persistent-net-generator.rules
+
+- name: Remove interface config files
+  file:
+    state: absent
+    path: "{{item}}"
+  with_fileglob:
+    - /etc/sysconfig/network-scripts/ifcfg-*
+  when: item != "/etc/sysconfig/network-scripts/ifcfg-lo"
+
+- name: Create network interface config file for enp0s3 (default interface)
+  blockinfile:
+    path: /etc/sysconfig/network-scripts/ifcfg-enp0s3
+    create: yes
+    owner: root
+    mode: 0544
+    block: |
+      # Created by Ansible
+      DEVICE="enp0s3"
+      ONBOOT=yes
+      TYPE=Ethernet
+      BOOTPROTO=dhcp
+
+- name: Create empty network config file
+  blockinfile:
+    path: /etc/sysconfig/network
+    create: yes
+    owner: root
+    mode: 0544
+    block: |
+      # Created by Ansible
+
+- name: Create poky directory
+  file:
+    state: directory
+    path: "{{ registerEnv.pokyHome | mandatory }}"
+    owner: "{{ registerEnv.pokyUser | mandatory }}"
+    group: "{{ registerEnv.pokyGroup | mandatory }}"

@@ -1,0 +1,16 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: yes
+
+  vars:
+    namespace: "base"
+    registerEnv:
+      pokyUser: "pokify"
+      pokyGroup: "pokify"
+      pokyHome: "/poky"
+
+  roles:
+    - base
+    - register
+    - clean

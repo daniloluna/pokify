@@ -1,0 +1,10 @@
+- name: Add new disk to lvg
+  lvg:
+    vg: vg01
+    pvs: /dev/sda2,/dev/sdb
+
+- name: extending existing filesystem
+  command: lvextend -l +100%FREE /dev/vg01/root
+
+- name: resize filesystem
+  command: xfs_growfs /dev/vg01/root

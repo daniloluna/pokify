@@ -1,0 +1,50 @@
+{
+  "variables": {
+    "diskSizeMb": "5000",
+    "vmName" : "baseCentos7_64",
+    "vmMemoryMb" : "2048",
+    "vmCpu" : "2",
+    "rootPassword" : "pokify"
+  },
+  "builders": [{
+    "type": "virtualbox-iso",
+    "guest_os_type": "RedHat_64",
+    "iso_url": "../isos/CentOS-7-x86_64-Minimal-1708.iso",
+    "iso_checksum": "bba314624956961a2ea31dd460cd860a77911c1e0a56e4820a12b9c5dad363f5",
+    "iso_checksum_type": "sha256",
+    "ssh_username": "root",
+    "ssh_password": "{{user `rootPassword`}}",
+    "disk_size": "{{user `diskSizeMb`}}",
+    "hard_drive_interface": "sata",
+    "headless": false,
+    "output_directory": "builds",
+    "vm_name": "{{user `vmName`}}",
+    "keep_registered": true,
+    "format": "ova",
+    "boot_command": [
+      "<up><tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+    ],
+    "boot_wait": "10s",
+    "http_directory": "http",
+    "guest_additions_mode": "disable",
+    "vboxmanage": [
+      ["modifyvm", "{{.Name}}", "--memory", "{{user `vmMemoryMb`}}"],
+      ["modifyvm", "{{.Name}}", "--cpus", "{{user `vmCpu`}}"]
+    ],
+    "shutdown_command": "echo 'pokify'|sudo -S /sbin/halt -h -p"
+  }],
+  "provisioners": [{
+      "type": "shell",
+      "execute_command": "echo 'pokify' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "script": "scripts/ansible.sh"
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "provision.yml",
+      "playbook_dir": "../ansible"
+    }, {
+      "type": "shell",
+      "script": "scripts/minimize.sh"
+    }
+  ]
+}

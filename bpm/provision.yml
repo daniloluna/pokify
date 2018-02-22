@@ -1,0 +1,14 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: yes
+
+  vars:
+    namespace: "bpm"
+    registerEnv:
+      pokyBpmUser: "admin"
+      pokyBpmHome: "/opt/ibm/BPM/v8.5"
+
+  roles:
+    - extenddisk
+    - register

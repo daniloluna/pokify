@@ -1,0 +1,5 @@
+---
+registerEnv:
+  pokyUser: "pokify"
+  pokyGroup: "pokify"
+  pokyHome: "/poky"

@@ -1,0 +1,24 @@
+- name: Create local facts directory
+  file:
+    state: directory
+    path: "/etc/ansible/facts.d"
+    owner: "root"
+    group: "root"
+
+- name: Create local fact file
+  template:
+    src: factsRegisterTemplate.sh
+    dest: "/etc/ansible/facts.d/{{ namespace | mandatory }}.fact"
+    owner: root
+
+- name: Create env file
+  template:
+    src: envRegisterTemplate.sh
+    dest: "/etc/profile.d/{{ namespace | mandatory }}Env.sh"
+    owner: root
+
+- name: Create welcome message
+  copy:
+    src: pokiWelcome.sh
+    dest: /etc/profile.d/pokiWelcome.sh
+    owner: root

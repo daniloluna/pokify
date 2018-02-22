@@ -1,0 +1,45 @@
+{
+  "variables": {
+    "vmName" : "bpm",
+    "vmMemoryMb" : "6020",
+    "vmCpu" : "4",
+    "rootPassword" : "pokify",
+    "extendedDisk" : "tmp/extendedDisk.vdi"
+  },
+  "builders": [{
+    "type": "virtualbox-ovf",
+    "source_path": "../baseCentos7_64/builds/baseCentos7_64.ova",
+    "ssh_username": "root",
+    "ssh_password": "{{user `rootPassword`}}",
+    "output_directory": "builds",
+    "vm_name": "{{user `vmName`}}",
+    "format": "ova",
+    "guest_additions_mode": "disable",
+    "vboxmanage": [
+      ["modifyvm", "{{.Name}}", "--memory", "{{user `vmMemoryMb`}}"],
+      ["modifyvm", "{{.Name}}", "--cpus", "{{user `vmCpu`}}"],
+      ["storageattach", "{{.Name}}", "--medium", "{{user `extendedDisk`}}", "--storagectl", "SATA Controller", "--type", "hdd", "--port", "1"]
+    ],
+    "shutdown_command": "echo '{{user `rootPassword`}}'|sudo -S /sbin/halt -h -p"
+  }],
+  "provisioners": [{
+      "type": "ansible-local",
+      "playbook_file": "provision.yml",
+      "playbook_dir": "../ansible"
+    },
+    {
+      "type": "file",
+      "source": "files/",
+      "destination": "/var/tmp"
+    },
+    {
+      "type": "shell",
+      "script": "scripts/install.sh"
+    },
+    {
+        "type": "shell",
+        "script": "scripts/minimize.sh"
+    }
+  ]
+
+}

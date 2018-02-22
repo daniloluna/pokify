@@ -1,0 +1,41 @@
+- name: Create tmp directory
+  file:
+    state: directory
+    path: "/var/tmp/bpm"
+    owner: "root"
+    group: "root"
+
+- name: Extract installation files
+  unarchive:
+    src: "{{ item }}"
+    dest: /var/tmp/bpm
+    copy: no
+    owner: root
+  with_file_glob:
+    - "/var/tmp/*.tar.gz"
+
+- name: Set some ulimit values
+  lineinfile:
+    dest: /etc/security/limits.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: '\* soft stack', line: '* soft stack 32768' }
+    - { regexp: '\* hard stack', line: '* hard stack 32768' }
+    - { regexp: '\* soft nofile', line: '* soft nofile 65536' }
+    - { regexp: '\* hard nofile', line: '* hard nofile 65536' }
+    - { regexp: '\* soft nproc', line: '* soft nproc 16384' }
+    - { regexp: '\* hard nproc', line: '* hard nproc 16384' }
+
+- name: Create silent install BPM file
+  template:
+    src: BpmSilentInstall.xml
+    dest: "/var/tmp/bpm/responsefiles/BPM/BpmSilentInstall.xml"
+    owner: root
+
+# - name: Install BPM
+#   shell: ./IM64/installc -acceptLicense input ./responsefiles/BPM/BpmSilentInstall.xml -log silent_install.log
+#   args:
+#     chdir: /var/tmp/bpm/
+#   become: true
+#   become_user: root

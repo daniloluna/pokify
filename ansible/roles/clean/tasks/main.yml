@@ -1,0 +1,20 @@
+- name: Clean tmp
+  file:
+    state: absent
+    path: "{{item}}"
+  with_items:
+    - /tmp/*
+    - /var/tmp/*
+
+- name: Remove ssh key and other things
+  file:
+    state: absent
+    path: "{{item}}"
+  with_items:
+    - /etc/ssh/*key*
+    - ~root/.ssh/
+    - ~root/anaconda-ks.cfg
+    - ~root/.bash_history
+
+- name: No history file
+  shell: unset HISTFILE
