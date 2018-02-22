@@ -11,7 +11,7 @@
 
 ### Instructions
 1. Download the required BPM images into the */files* folder
-2. In a terminal console, go to the *pokify/bpm* folder and type `bash run.sh`
+2. In a terminal, go to the *pokify/bpm* folder and type `bash run.sh`
 3. Wait for the installation to finish (+- 1h on SSD). The image will be generated in the *builds* folder
 
 Once the image is generated, it will be used as the base image for other *poks*

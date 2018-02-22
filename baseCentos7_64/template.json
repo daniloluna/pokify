@@ -19,7 +19,7 @@
     "headless": false,
     "output_directory": "builds",
     "vm_name": "{{user `vmName`}}",
-    "keep_registered": true,
+    "keep_registered": false,
     "format": "ova",
     "boot_command": [
       "<up><tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
