@@ -12,15 +12,15 @@
 ### Instructions
 1. Download the required BPM images into the */files* folder
 2. In a terminal console, go to the *pokify/bpm* folder and type `bash run.sh`
-3. Wait for the installation to finish. The image will be generated in the *builds* folder
+3. Wait for the installation to finish (+- 1h on SSD). The image will be generated in the *builds* folder
 
 Once the image is generated, it will be used as the base image for other *poks*
 
 ### Installing
 1. On VirtuaBox go to *File -> Import Appliance*
 2. Select the generated image
-3. Import the image (Tip: use a HostOnly adapter, otherwise you will have to map all network ports manually)
-4. Start the VM
+3. Import the image
+4. Start the VM (Tip: use a HostOnly adapter, otherwise you will have to map all network ports manually)
 5. Login as root and get the current IP (`ip addr`)
 
 #### Credentials

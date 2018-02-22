@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TMPDIR=/var/tmp/
+TMPDIR=/var/tmp
 TMPBPM=$TMPDIR/bpm
 BPMHOME=/opt/ibm/BPM/v8.5
 
@@ -36,6 +36,16 @@ cd $BPMHOME/bin
 cp $TMPDIR/Standard-PC-SingleCluster-DB2.properties .
 ./BPMConfig.sh -create -de Standard-PC-SingleCluster-DB2.properties
 
+echo "configure db2 service"
+cp $TMPDIR/db2.service /etc/systemd/system
+systemctl --system daemon-reload
+systemctl enable db2.service
+
+echo "configure bpm service"
+cp $TMPDIR/bpm.service /etc/systemd/system
+systemctl --system daemon-reload
+systemctl enable bpm.service
+
 echo "remove temp files"
 rm -rf $TMPDIR/*
 
@@ -67,16 +77,6 @@ cd $BPMHOME/bin/
 ./BPMConfig.sh -stop Standard-PC-SingleCluster-DB2.properties
 
 su - db2inst1 -c "db2stop"
-
-echo "configure db2 service"
-cp $TMPDIR/db2.service /etc/systemd/system
-systemctl --system daemon-reload
-systemctl enable db2.service
-
-echo "configure bpm service"
-cp $TMPDIR/bpm.service /etc/systemd/system
-systemctl --system daemon-reload
-systemctl enable bpm.service
 
 echo "done"
 
