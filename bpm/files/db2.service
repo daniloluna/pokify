@@ -1,0 +1,11 @@
+[Unit]
+Description=Starts db2 at system startup.
+
+[Service]
+Type=forking
+User=db2inst1
+ExecStart=/bin/bash -c ". /home/db2inst1/sqllib/db2profile && /home/db2inst1/sqllib/adm/db2start"
+ExecStop=/bin/bash -c ". /home/db2inst1/sqllib/db2profile && /home/db2inst1/sqllib/adm/db2stop force"
+
+[Install]
+WantedBy=multi-user.target

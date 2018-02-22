@@ -1,0 +1,14 @@
+[Unit]
+Description=Starts BPM at system startup.
+Requires=db2.service
+After=db2.service
+
+[Service]
+Type=forking
+User=root
+ExecStart=/bin/bash -c "cd /opt/ibm/BPM/v8.5/bin/ && ./BPMConfig.sh -start Standard-PC-SingleCluster-DB2.properties"
+ExecStop=/bin/bash -c "cd /opt/ibm/BPM/v8.5/bin/ && ./BPMConfig.sh -stop Standard-PC-SingleCluster-DB2.properties"
+TimeoutSec=600
+
+[Install]
+WantedBy=multi-user.target

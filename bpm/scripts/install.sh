@@ -66,8 +66,18 @@ echo "stop applications"
 cd $BPMHOME/bin/
 ./BPMConfig.sh -stop Standard-PC-SingleCluster-DB2.properties
 
- su - db2inst1 -c "db2stop"
+su - db2inst1 -c "db2stop"
 
- echo "done"
+echo "configure db2 service"
+cp $TMPDIR/db2.service /etc/systemd/system
+systemctl --system daemon-reload
+systemctl enable db2.service
 
- exit
+echo "configure bpm service"
+cp $TMPDIR/bpm.service /etc/systemd/system
+systemctl --system daemon-reload
+systemctl enable bpm.service
+
+echo "done"
+
+exit
